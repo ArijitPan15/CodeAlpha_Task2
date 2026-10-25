@@ -40,6 +40,9 @@ CodeAlpha_Task2/
 │   ├── tests.py
 │   ├── urls.py
 │   └── views.py
+├── screenshots/
+│   ├── event-list.png
+│   └── event-detail.png
 ├── static/
 │   ├── css/site.css
 │   └── js/site.js
@@ -84,6 +87,7 @@ CodeAlpha_Task2/
 | `templates/events/dashboard.html` | Current user's upcoming registrations and past event history. |
 | `templates/events/cancel_registration.html` | Cancellation confirmation page; the change is submitted with POST. |
 | `templates/registration/login.html`, `signup.html` | Authentication screens. |
+| `screenshots/` | Screenshots of event discovery and event details. |
 | `static/css/site.css` | Responsive blue-and-white page styling. |
 | `static/js/site.js` | Optional browser confirmation on forms marked with `data-confirm`; server checks remain authoritative. |
 
@@ -166,47 +170,23 @@ Run the included tests with:
 python manage.py test
 ```
 
-## GitHub upload
+## Repository
 
-Create a public GitHub repository named `CodeAlpha_Task2` (the GitHub-safe spelling of “Code Alpha Task 2”), then replace `YOUR_GITHUB_USERNAME` below with the account that owns it:
+Published at [ArijitPan15/CodeAlpha_Task2](https://github.com/ArijitPan15/CodeAlpha_Task2).
 
-```powershell
-git init
-git add .
-git commit -m "Build event registration system"
-git branch -M main
-git remote add origin https://github.com/YOUR_GITHUB_USERNAME/CodeAlpha_Task2.git
-git push -u origin main
-```
+## How the website works
 
-If this folder is already a Git repository, skip `git init`. Do not commit `db.sqlite3`, `.env`, or a production secret key.
+Visitors browse and filter upcoming or past events, then open an event to check its date, venue and remaining seats. They create an account or log in before reserving a seat. The dashboard lists their registrations and lets them cancel an upcoming reservation; organizers manage events and registrations in Django Admin.
 
-## LinkedIn project description
+### Browse events
 
-> Built an Event Registration System during the CodeAlpha Backend Development internship using Python, Django, SQLite, Django ORM, Django templates and Bootstrap 5. The application supports account signup and login, event search and filtering, event capacity tracking, authenticated registrations, cancellation, and a personalized registration dashboard. I used a database-level unique constraint and transactional checks to prevent duplicate or over-capacity registrations, and Django Admin to manage event and registration records. This project helped me practice Django models, forms, views, authentication, migrations, validation and automated testing.
+![Gather event listing with search, upcoming events and available seats](screenshots/event-list.png)
 
-## 2–3 minute demonstration script
+### View an event and register
 
-**0:00–0:20 — Introduction**  
-“Hi, this is my CodeAlpha Event Registration System. I built it with Django, SQLite, Django templates and Bootstrap 5. It lets attendees discover events, reserve a seat and manage their registrations.”
+The event page shows its details and current availability. After signing in, the visitor can reserve a seat; the dashboard then shows that registration and provides a cancellation action.
 
-**0:20–0:50 — Browse events**  
-Show the homepage. Search by a title, switch between upcoming and past events, then open an event detail page. Point out date, venue, capacity, remaining seats and event status.
-
-**0:50–1:20 — Account and registration**  
-Create a test account or log in. Register for an upcoming event and show the success message and updated seat count. Explain that the user comes from Django's login session, not from a form field.
-
-**1:20–1:45 — Dashboard and cancellation**  
-Open My registrations, show the upcoming event and past events sections, then open the cancellation confirmation and submit it. Return to the event page or dashboard to show the released seat.
-
-**1:45–2:15 — Admin**  
-Open `/admin/` with a superuser. Show event search and filters, registration records, and the registered/available seat columns. Mention that capacity cannot be reduced below existing registrations.
-
-**2:15–2:40 — Backend explanation**  
-“A request travels from URL configuration to a view, then through validation and the ORM to SQLite. Registration checks happen inside a transaction, and a unique database constraint prevents duplicate user/event pairs. Available seats are calculated from capacity and registrations, so there is no separate seat count that can drift out of sync.”
-
-**2:40–2:50 — Close**  
-“The project includes migrations and tests for signup, login, event pages, registration rules, cancellation ownership and admin permissions. Thanks for watching.”
+![Gather event details with remaining seats and registration sign-in action](screenshots/event-detail.png)
 
 ## Deployment notes
 

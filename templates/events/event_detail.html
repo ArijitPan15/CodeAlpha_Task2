@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}{{ event.title }} — Gather{% endblock %}
+{% block content %}
+  <section class="detail-banner">
+    <div class="container py-4">
+      <a href="{% url 'events:event_list' %}" class="back-link">← Back to events</a>
+    </div>
+  </section>
+  <section class="container detail-layout pb-5">
+    <div class="row g-4 g-lg-5">
+      <div class="col-lg-8">
+        <div class="detail-date-card mb-4">
+          <span class="detail-month">{{ event.event_date|date:'M' }}</span>
+          <span class="detail-day">{{ event.event_date|date:'d' }}</span>
+        </div>
+        <span class="status-pill status-{{ event.status }}">{{ event.status|title }}</span>
+        <h1 class="display-6 fw-bold mt-3">{{ event.title }}</h1>
+        <p class="lead text-secondary">{{ event.event_date|date:'l, F j, Y · g:i A' }} <span class="mx-2">·</span> {{ event.venue }}</p>
+        <hr class="my-4">
+        <h2 class="h5 fw-bold">About this event</h2>
+        <div class="event-long-description">{{ event.description|linebreaks }}</div>
+      </div>
+      <aside class="col-lg-4">
+        <div class="registration-card p-4">
+          <p class="eyebrow text-primary mb-2">Your seat</p>
+          <h2 class="h4 fw-bold">{% if event.available_seats %}{{ event.available_seats }} seat{{ event.available_seats|pluralize }} left{% else %}Event is full{% endif %}</h2>
+          <p class="text-secondary">Capacity: {{ event.capacity }} attendees</p>
+          {% if registration %}
+            <div class="alert alert-success mb-0">You’re registered. Your place is saved.</div>
+            <a class="btn btn-outline-primary w-100 mt-3" href="{% url 'events:dashboard' %}">Go to my registrations</a>
+          {% elif event.status == 'completed' %}
+            <button class="btn btn-secondary w-100" disabled>Registration closed</button>
+          {% elif event.available_seats == 0 %}
+            <button class="btn btn-secondary w-100" disabled>Event full</button>
+          {% elif user.is_authenticated %}
+            <form method="post" action="{% url 'events:register_event' event.pk %}">
+              {% csrf_token %}
+              <button class="btn btn-primary btn-lg w-100" type="submit">Register for free</button>
+            </form>
+          {% else %}
+            <a class="btn btn-primary btn-lg w-100" href="{% url 'login' %}?next={{ request.path|urlencode }}">Log in to register</a>
+            <p class="small text-center text-secondary mt-3 mb-0">New to Gather? <a href="{% url 'events:signup' %}">Create an account</a>.</p>
+          {% endif %}
+        </div>
+      </aside>
+    </div>
+  </section>
+{% endblock %}

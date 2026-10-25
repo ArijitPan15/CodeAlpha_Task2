@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Cancel registration — Gather{% endblock %}
+{% block content %}
+  <section class="container py-5">
+    <div class="confirmation-card mx-auto p-4 p-md-5">
+      <p class="eyebrow text-primary mb-2">Registration change</p>
+      <h1 class="h3 fw-bold">Cancel your place?</h1>
+      <p class="text-secondary">You’re registered for <strong>{{ registration.event.title }}</strong> on {{ registration.event.event_date|date:'F j, Y · g:i A' }}.</p>
+      <p class="text-secondary">If you continue, your seat will become available to someone else.</p>
+      {% if registration.event.event_date > now %}
+        <form method="post" class="d-flex flex-wrap gap-2 mt-4" data-confirm="Cancel your registration for this event?">
+          {% csrf_token %}
+          <button class="btn btn-danger" type="submit">Yes, cancel registration</button>
+          <a class="btn btn-outline-secondary" href="{% url 'events:dashboard' %}">Keep my place</a>
+        </form>
+      {% else %}
+        <div class="alert alert-warning mb-0">This event has passed, so its registration can no longer be cancelled.</div>
+      {% endif %}
+    </div>
+  </section>
+{% endblock %}

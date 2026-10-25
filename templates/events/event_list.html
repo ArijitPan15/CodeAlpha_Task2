@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %}Explore events — Gather{% endblock %}
+{% block content %}
+  <section class="hero-section">
+    <div class="container py-5 py-lg-6">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-8">
+          <p class="eyebrow mb-2">Make room for something memorable</p>
+          <h1 class="display-5 fw-bold mb-3">Find your next <span class="text-accent">good event.</span></h1>
+          <p class="lead mb-0 hero-copy">Discover local talks, workshops and get-togethers. Save your seat in a few clicks.</p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+          {% if not user.is_authenticated %}
+            <a class="btn btn-light btn-lg px-4" href="{% url 'events:signup' %}">Join the community</a>
+          {% else %}
+            <a class="btn btn-light btn-lg px-4" href="{% url 'events:dashboard' %}">View my registrations</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container py-5">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4">
+      <div>
+        <p class="eyebrow text-primary mb-1">The calendar</p>
+        <h2 class="h3 mb-0">Events worth showing up for</h2>
+      </div>
+      <form class="row g-2 event-filters" method="get" action="{% url 'events:event_list' %}">
+        <div class="col-auto">
+          <label class="visually-hidden" for="event-search">Search events</label>
+          <input class="form-control" id="event-search" type="search" name="q" value="{{ query }}" placeholder="Search events">
+        </div>
+        <div class="col-auto">
+          <label class="visually-hidden" for="event-status">Event time</label>
+          <select class="form-select" id="event-status" name="status">
+            <option value="upcoming" {% if status_filter == 'upcoming' %}selected{% endif %}>Upcoming</option>
+            <option value="past" {% if status_filter == 'past' %}selected{% endif %}>Past events</option>
+            <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All events</option>
+          </select>
+        </div>
+        <div class="col-auto"><button class="btn btn-primary" type="submit">Find events</button></div>
+      </form>
+    </div>
+
+    {% if events %}
+      <div class="row g-4">
+        {% for event in events %}
+          <div class="col-md-6 col-xl-4">
+            <article class="card event-card h-100">
+              <div class="event-card-top {% if event.status == 'completed' %}event-card-muted{% endif %}">
+                <span class="status-pill status-{{ event.status }}">{{ event.status|title }}</span>
+                <span class="event-month">{{ event.event_date|date:'M' }}</span>
+                <span class="event-day">{{ event.event_date|date:'d' }}</span>
+              </div>
+              <div class="card-body d-flex flex-column p-4">
+                <p class="small text-muted mb-2">{{ event.event_date|date:'l, F j · g:i A' }}</p>
+                <h3 class="h5 fw-bold">{{ event.title }}</h3>
+                <p class="text-secondary event-description">{{ event.description|truncatewords:24 }}</p>
+                <div class="event-card-meta mt-auto">
+                  <span>{{ event.venue }}</span>
+                  <span>{% if event.available_seats %}{{ event.available_seats }} seat{{ event.available_seats|pluralize }} left{% else %}At capacity{% endif %}</span>
+                </div>
+                <a class="btn btn-outline-primary mt-3" href="{% url 'events:event_detail' event.pk %}">View event</a>
+              </div>
+            </article>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state text-center py-5 px-3">
+        <div class="empty-icon" aria-hidden="true">✳</div>
+        <h3 class="h5">No events found</h3>
+        <p class="text-secondary mb-0">Try another search or change the time filter.</p>
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}

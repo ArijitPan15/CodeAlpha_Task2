@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Log in — Gather{% endblock %}
+{% block content %}
+  <section class="auth-wrap container py-5">
+    <div class="auth-card mx-auto p-4 p-md-5">
+      <p class="eyebrow text-primary mb-2">Welcome back</p>
+      <h1 class="h3 fw-bold mb-2">Log in to Gather</h1>
+      <p class="text-secondary mb-4">Pick up where you left off and manage your events.</p>
+      <form method="post">
+        {% csrf_token %}
+        {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+        {% for field in form %}
+          <div class="mb-3">
+            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% for error in field.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+          </div>
+        {% endfor %}
+        <input type="hidden" name="next" value="{{ next }}">
+        <button class="btn btn-primary btn-lg w-100 mt-2" type="submit">Log in</button>
+      </form>
+      <p class="text-center text-secondary mt-4 mb-0">Need an account? <a href="{% url 'events:signup' %}">Create one</a>.</p>
+    </div>
+  </section>
+{% endblock %}

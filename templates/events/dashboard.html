@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}My registrations — Gather{% endblock %}
+{% block content %}
+  <section class="page-heading">
+    <div class="container py-5">
+      <p class="eyebrow mb-2">Your calendar</p>
+      <h1 class="display-6 fw-bold mb-2">My registrations</h1>
+      <p class="lead text-secondary mb-0">Your upcoming plans and the events you’ve already attended.</p>
+    </div>
+  </section>
+  <section class="container py-4">
+    <div class="dashboard-section mb-5">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h4 fw-bold mb-0">Coming up</h2>
+        <span class="count-chip">{{ upcoming_registrations|length }}</span>
+      </div>
+      {% if upcoming_registrations %}
+        <div class="row g-3">
+          {% for registration in upcoming_registrations %}
+            <div class="col-lg-6">
+              <article class="registration-row p-3 p-md-4">
+                <div class="d-flex gap-3">
+                  <div class="mini-date"><span>{{ registration.event.event_date|date:'M' }}</span><strong>{{ registration.event.event_date|date:'d' }}</strong></div>
+                  <div class="flex-grow-1">
+                    <span class="registered-label">Registered</span>
+                    <h3 class="h5 fw-bold mt-1"><a class="text-decoration-none text-dark" href="{% url 'events:event_detail' registration.event.pk %}">{{ registration.event.title }}</a></h3>
+                    <p class="small text-secondary mb-2">{{ registration.event.event_date|date:'l, F j · g:i A' }} · {{ registration.event.venue }}</p>
+                    <a class="small" href="{% url 'events:cancel_registration' registration.pk %}">Cancel registration</a>
+                  </div>
+                </div>
+              </article>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state compact-empty">
+          <h3 class="h6 mb-1">Nothing on the calendar yet</h3>
+          <p class="text-secondary mb-3">Find an event and register to save your place.</p>
+          <a class="btn btn-primary btn-sm" href="{% url 'events:event_list' %}">Explore events</a>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="dashboard-section">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h4 fw-bold mb-0">Past events</h2>
+        <span class="count-chip">{{ past_registrations|length }}</span>
+      </div>
+      {% if past_registrations %}
+        <div class="table-responsive dashboard-table-wrap">
+          <table class="table align-middle mb-0">
+            <thead><tr><th>Event</th><th>Date</th><th>Venue</th><th>Registration status</th></tr></thead>
+            <tbody>
+              {% for registration in past_registrations %}
+                <tr>
+                  <td><a class="fw-semibold text-decoration-none" href="{% url 'events:event_detail' registration.event.pk %}">{{ registration.event.title }}</a></td>
+                  <td>{{ registration.event.event_date|date:'M j, Y' }}</td>
+                  <td>{{ registration.event.venue }}</td>
+                  <td><span class="status-pill status-completed">Completed</span></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p class="text-secondary">Your past event registrations will appear here.</p>
+      {% endif %}
+    </div>
+  </section>
+{% endblock %}
